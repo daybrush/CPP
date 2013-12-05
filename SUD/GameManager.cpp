@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "GameManager.h"
 #include "Mob.h"
 #include "Block.h"
@@ -53,6 +53,7 @@ void CGameManager::Release() {
 int CGameManager::GetKey() {
 	int key = _getch();
 	
+	// agebreak : ì´ ë¶€ë¶„ ì²˜ë¦¬ì— ëŒ€í•œ ì„¤ëª…ì„ ì£¼ì„ì„ ë‹¤ëŠ”ê²ƒì´ ì¢‹ìŒ. ì™œ ì´ë ‡ê²Œ í•˜ëŠ”ê±´ì§€ì— ëŒ€í•´ì„œ..
 	if(key == 224)
 		key = 1000 + _getch();
 
@@ -63,9 +64,9 @@ int CGameManager::GetKey() {
 
 bool CGameManager::inputProc()
 {
-	//Å°º¸µå ÀÔ·ÂÀ» ¹Þ¾Æ¼­
-	// Ä¿¸Çµå¸¦ ÆÄ½ÌÇÏ°í, ¸Â°Ô Ã³¸®ÇÑ´Ù.
-	// q¸¦ ÀÔ·Â ¹ÞÀ¸¸é Á¾·áµÈ´Ù.
+	//í‚¤ë³´ë“œ ìž…ë ¥ì„ ë°›ì•„ì„œ
+	// ì»¤ë§¨ë“œë¥¼ íŒŒì‹±í•˜ê³ , ë§žê²Œ ì²˜ë¦¬í•œë‹¤.
+	// që¥¼ ìž…ë ¥ ë°›ìœ¼ë©´ ì¢…ë£Œëœë‹¤.
 
 	std::string strInput;
 	//getline(std::cin, strInput);
@@ -88,7 +89,7 @@ bool CGameManager::inputProc()
 		m_PC->Attack(m_Map);
 		break;
 	case 'Q':
-		printf_s("°ÔÀÓÀ» Á¾·áÇÏ½Ã°Ú½À´Ï±î? (Y/N)\n");
+		printf_s("ê²Œìž„ì„ ì¢…ë£Œí•˜ì‹œê² ìŠµë‹ˆê¹Œ? (Y/N)\n");
 		int quitKey = GetKey();
 		if(quitKey == 'Y')
 			return false;
@@ -108,6 +109,6 @@ void CGameManager::CreateMobs() {
 
 	CMob* mob = new CMob();
 	mob->SetExp(30);
-	mob->SetName("¸ÚÁø ¸÷");
+	mob->SetName("ë©‹ì§„ ëª¹");
 	m_Map.GetMapInfo(2, 3)->pChr = mob;
 }

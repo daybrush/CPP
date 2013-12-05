@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 
 struct Position {
@@ -62,6 +62,7 @@ public:
 	int GetHp() {return m_hp;}
 	void SetHp(int hp){m_hp = hp;}
 
+	// agebreak : MHP는 Max HP인가? 그러면 그냥 MaxHP라고 쓰는게 더 좋다. 
 	int GetMHp() {return m_mhp;}
 	void SetMHp(int mhp){m_mhp = mhp;}
 

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "Character.h"
 #include "GameMap.h"
 
@@ -7,7 +7,7 @@ CCharacter::CCharacter(void)
 	m_position.x = 0;
 	m_position.y = 0;
 
-	m_name = "ÀÓ½Ã¿ä";
+	m_name = "ìž„ì‹œìš”";
 	m_exp = 0;
 
 	m_lv = 1;
@@ -35,21 +35,21 @@ void CCharacter::Attacked(CCharacter* chr, int damage, bool reflection) {
 	switch (result)
 	{
 	case ATTACK_HIT:
-			printf_s("-- %s´Â °ø°Ý¿¡ (%d)ÀÇ ÇÇÇØ¸¦ ÀÔ¾ú´Ù.\n", GetName().c_str(), damage);
+			printf_s("-- %sëŠ” ê³µê²©ì— (%d)ì˜ í”¼í•´ë¥¼ ìž…ì—ˆë‹¤.\n", GetName().c_str(), damage);
 			break;
-	case ATTACK_MISS:                // È¸ÇÇ½Ã¿¡´Â µ¥¹ÌÁö°¡ ¾ø´Ù.
-			printf_s("-- %s´Â °ø°ÝÀ» ÇÇÇß´Ù.\n", GetName().c_str());
+	case ATTACK_MISS:                // íšŒí”¼ì‹œì—ëŠ” ë°ë¯¸ì§€ê°€ ì—†ë‹¤.
+			printf_s("-- %sëŠ” ê³µê²©ì„ í”¼í–ˆë‹¤.\n", GetName().c_str());
 			damage = 0;
 			break;
 	case ATTACK_GUARD:
-			printf_s("-- ´Â °ø°ÝÀ» ¸·¾Ò´Ù. (%d)ÀÇ ÇÇÇØ¸¸ ÀÔ¾ú´Ù.\n", GetName().c_str(), damage / 2);
+			printf_s("-- ëŠ” ê³µê²©ì„ ë§‰ì•˜ë‹¤. (%d)ì˜ í”¼í•´ë§Œ ìž…ì—ˆë‹¤.\n", GetName().c_str(), damage / 2);
 			damage = damage / 2;
 			break;        
 	default:
 			break;
 	}
 */
-	sprintf_s(buffer, "%s´ÔÀÌ[%s]ÇÑÅ× %dµ¥¹ÌÁö¸¦ ÀÔÇû½À´Ï´Ù.",chr->GetName().c_str(), m_name.c_str(), damage );	
+	sprintf_s(buffer, "%së‹˜ì´[%s]í•œí…Œ %dë°ë¯¸ì§€ë¥¼ ìž…í˜”ìŠµë‹ˆë‹¤.",chr->GetName().c_str(), m_name.c_str(), damage );	
 	CLog::Add(buffer);
 	
 	if(reflection)
@@ -75,12 +75,14 @@ void CCharacter::MinusHp(CCharacter* chr, int minus) {
 		m_hp = m_hp - minus;
 	}
 }
+
+// agebreak : ì´ êµ¬í˜„ì€ ìºë¦­í„°ê°€ ì•„ë‹Œ, Mobì—ê²Œ ìžˆì–´ì•¼ í•˜ì§€ ì•Šì„ê¹Œ?
 void CCharacter::Killed(CCharacter* chr) {
-	CLog::Add("¸ó½ºÅÍ¸¦ Á×¿´½À´Ï´Ù.");
+	CLog::Add("ëª¬ìŠ¤í„°ë¥¼ ì£½ì˜€ìŠµë‹ˆë‹¤.");
 	
 	
 	char buf[100];
-	sprintf_s(buf, "%d°æÇèÄ¡¸¦ ¾ò¾ú½À´Ï´Ù.", GetExp());
+	sprintf_s(buf, "%dê²½í—˜ì¹˜ë¥¼ ì–»ì—ˆìŠµë‹ˆë‹¤.", GetExp());
 	CLog::Add(buf);
 
 	chr->AddExp(GetExp());
@@ -102,7 +104,7 @@ void CCharacter::LevelUp() {
 	m_lv = m_lv + 1;
 	m_exp = 0;
 	m_mexp = m_mexp + 100;
-	CLog::Add("·¹º§ ¾÷ÇÏ¼Ì½À´Ï´Ù.");
+	CLog::Add("ë ˆë²¨ ì—…í•˜ì…¨ìŠµë‹ˆë‹¤.");
 }
 
 Position CCharacter::Move(DIRECTION dir) {

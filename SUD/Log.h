@@ -1,4 +1,7 @@
-#pragma once
+﻿#pragma once
+
+// agebreak : 클래스의 멤버변수와 함수를 static으로 만들것이 아니라, 
+// 1. 싱글톤을 사용하던가, 2. 이 클래스의 객체를 static으로 선언해서 사용하면 됨.
 class CLog
 {
 public:

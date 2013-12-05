@@ -1,8 +1,9 @@
-#pragma once
+﻿#pragma once
 #define MAP_SIZE 12
 #include "Character.h"
 struct MapInfo
 {
+	// agebreak : 부득이한 경우를 제외하고는 변수명에 약자를 사용하는것은 좋지 못함
 	CCharacter* pChr;
 
 };
