@@ -78,8 +78,6 @@ void CPC::Attack(CGameMap& map) {
 		pos.x = pos.x + 1;
 		break;
 	}
-	if(map.IsShow(pos.x, pos.y)) {
-		int damage = GetPower() / 2 + (rand() % (GetPower() ));
+	if(map.IsShow(pos.x, pos.y))
 		map.GetMapInfo(pos.x, pos.y)->pChr->Attacked(this, 5, true);
-	}
 }
