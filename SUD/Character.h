@@ -41,8 +41,8 @@ public:
 
 	TYPE GetType() {return m_type;}
 
-	int GetLv() {return m_lv;}
-	void SetLv(int lv){m_lv = lv;}
+	int GetLevel() {return m_level;}
+	void SetLevel(int lv){m_level = lv;}
 	void LevelUp();
 
 
@@ -50,11 +50,11 @@ public:
 	int GetHp() {return m_hp;}
 	void SetHp(int hp){m_hp = hp;}
 
-	int GetMHp() {return m_mhp;}
-	void SetMHp(int mhp){m_mhp = mhp;}
+	int GetMaxHp() {return m_maxhp;}
+	void SetMaxHp(int maxhp){m_maxhp = maxhp;}
 
-	int GetMMp() {return m_mmp;}
-	void SetMMp(int mmp){m_mmp = mmp;}
+	int GetMaxMp() {return m_maxmp;}
+	void SetMaxMp(int maxmp){m_maxmp = maxmp;}
 
 	int GetMp() {return m_mp;}
 	void SetMp(int mp){m_mp = mp;}
@@ -63,23 +63,23 @@ public:
 	void SetExp(int exp){m_exp = exp;}
 	void AddExp(int exp);
 
-	int GetMExp() {return m_mexp;}
-	void SetMExp(int mexp){m_mexp = mexp;}
+	int GetMaxExp() {return m_maxexp;}
+	void SetMaxExp(int maxexp){m_maxexp = maxexp;}
 	
 protected:
 	Position m_position;
 	std::string m_name;
 	TYPE m_type;
 
-	int m_lv;
+	int m_level;
 
-	int m_mhp;
+	int m_maxhp;
 	int m_hp;
 
-	int m_mmp;
+	int m_maxmp;
 	int m_mp;
 	
-	int m_mexp;
+	int m_maxexp;
 	int m_exp;
 
 };

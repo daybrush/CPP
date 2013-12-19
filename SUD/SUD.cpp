@@ -8,6 +8,11 @@
 
 int _tmain(int argc, _TCHAR* argv[])
 {
+
+	argc;
+	argv;
+
+
 	std::string helloWorld = "Hello World";
 	std::cout<<helloWorld << std::endl;
 

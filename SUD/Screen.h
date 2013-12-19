@@ -8,7 +8,7 @@
 #define CLEAR "clear"
 #endif
 
-
+#define SCREEN_SIZE 12
 class CScreen
 {
 public:

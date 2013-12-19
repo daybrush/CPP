@@ -33,7 +33,7 @@ void CPC::ChangeDir(CGameMap &map, DIRECTION dir) {
 		}
 		mapinfo = map.GetMapInfo(x, y);
 
-		if(!map.IsShow(x,y) || mapinfo->pChr->GetType() != BLOCK)
+		if(!map.IsShow(x,y) || mapinfo->pChracter->GetType() != BLOCK)
 			Move(dir);
 
 	} else {
@@ -55,13 +55,14 @@ std::string CPC::GetSymbol() {
 	return "¡¡";
 }
 void CPC::Killed(CCharacter *chr) {
-	CLog::Add("YOU DIE");
+	chr;
+	CLog::GetInstance()->Add("YOU DIE");
 	m_is_over = true;
 }
 void CPC::Attack(CGameMap& map) {
 	char buffer[1024];
 	sprintf_s(buffer, "%s´ÔÀÌ ÈÖµÑ·¶½À´Ï´Ù.",GetName().c_str());	
-	CLog::Add(buffer);
+	CLog::GetInstance()->Add(buffer);
 
 	Position pos = m_position;
 	switch(m_Perspective) {
@@ -79,5 +80,5 @@ void CPC::Attack(CGameMap& map) {
 		break;
 	}
 	if(map.IsShow(pos.x, pos.y))
-		map.GetMapInfo(pos.x, pos.y)->pChr->Attacked(this, 5, true);
+		map.GetMapInfo(pos.x, pos.y)->pChracter->Attacked(this, 5, true);
 }

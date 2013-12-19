@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "Character.h"
 #include "GameMap.h"
 
@@ -7,13 +7,13 @@ CCharacter::CCharacter(void)
 	m_position.x = 0;
 	m_position.y = 0;
 
-	m_name = "ÀÓ½Ã¿ä";
+	m_name = "ìž„ì‹œìš”";
 	m_exp = 0;
 
-	m_lv = 1;
-	m_mhp = m_hp = 20;
-	m_mmp = m_mp = 20;
-	m_mexp = 100;
+	m_level = 1;
+	m_maxhp = m_hp = 20;
+	m_maxmp = m_mp = 20;
+	m_maxexp = 100;
 }
 
 
@@ -30,8 +30,8 @@ void CCharacter::SetPosition(int x, int y) {
 
 void CCharacter::Attacked(CCharacter* chr, int power, bool reflection) {
 	char buffer[1024];
-	sprintf_s(buffer, "%s´ÔÀÌ[%s]ÇÑÅ× %dµ¥¹ÌÁö¸¦ ÀÔÇû½À´Ï´Ù.",chr->GetName().c_str(), m_name.c_str(), power );	
-	CLog::Add(buffer);
+	sprintf_s(buffer, "%së‹˜ì´[%s]í•œí…Œ %dë°ë¯¸ì§€ë¥¼ ìž…í˜”ìŠµë‹ˆë‹¤.",chr->GetName().c_str(), m_name.c_str(), power );	
+	CLog::GetInstance()->Add(buffer);
 	
 	if(reflection)
 		chr->Attacked(this, 3, false);
@@ -40,8 +40,8 @@ void CCharacter::Attacked(CCharacter* chr, int power, bool reflection) {
 	
 	if(chr->m_type != PC) {
 		char buffer2[1024];
-		sprintf_s(buffer2, "%s hp %5d / %5d", GetName().c_str(), GetHp(), GetMHp() );	
-		CLog::AddMonsterLog(buffer2);
+		sprintf_s(buffer2, "%s hp %5d / %5d", GetName().c_str(), GetHp(), GetMaxHp() );	
+		CLog::GetInstance()->AddMonsterLog(buffer2);
 	}
 
 
@@ -57,33 +57,33 @@ void CCharacter::MinusHp(CCharacter* chr, int minus) {
 	}
 }
 void CCharacter::Killed(CCharacter* chr) {
-	CLog::Add("¸ó½ºÅÍ¸¦ Á×¿´½À´Ï´Ù.");
+	CLog::GetInstance()->Add("ëª¬ìŠ¤í„°ë¥¼ ì£½ì˜€ìŠµë‹ˆë‹¤.");
 	
 	
 	char buf[100];
-	sprintf_s(buf, "%d°æÇèÄ¡¸¦ ¾ò¾ú½À´Ï´Ù.", GetExp());
-	CLog::Add(buf);
+	sprintf_s(buf, "%dê²½í—˜ì¹˜ë¥¼ ì–»ì—ˆìŠµë‹ˆë‹¤.", GetExp());
+	CLog::GetInstance()->Add(buf);
 
 	chr->AddExp(GetExp());
 }
 void CCharacter::AddExp(int exp) {
-	if(m_mexp == 0)
+	if(m_maxexp == 0)
 		printf_s("Error\n");
-	if(m_exp + exp > m_mexp) {
-		int extraExp = m_exp + exp - m_mexp;
+	if(m_exp + exp > m_maxexp) {
+		int extraExp = m_exp + exp - m_maxexp;
 		LevelUp();
 		AddExp(extraExp);
-	} else if(m_exp + exp == m_mexp) {
+	} else if(m_exp + exp == m_maxexp) {
 		LevelUp();
 	} else {
 		SetExp(m_exp + exp);
 	}
 }
 void CCharacter::LevelUp() {
-	m_lv = m_lv + 1;
+	m_level = m_level + 1;
 	m_exp = 0;
-	m_mexp = m_mexp + 100;
-	CLog::Add("·¹º§ ¾÷ÇÏ¼Ì½À´Ï´Ù.");
+	m_maxexp = m_maxexp + 100;
+	CLog::GetInstance()->Add("ë ˆë²¨ ì—…í•˜ì…¨ìŠµë‹ˆë‹¤.");
 }
 
 Position CCharacter::Move(DIRECTION dir) {

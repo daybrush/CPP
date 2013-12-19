@@ -8,7 +8,7 @@
 CGameManager::CGameManager(void)
 {
 	m_PC = new CPC();
-	CLog::reset();
+	CLog::GetInstance()->reset();
 }
 
 
@@ -32,7 +32,6 @@ void CGameManager::Init() {
 }
 void CGameManager::Run() {
 	while(inputProc() ) {
-		int a= 0;
 		m_Screen.Clean();
 		m_Screen.Show(m_Map, m_PC);
 
@@ -53,9 +52,12 @@ void CGameManager::Release() {
 int CGameManager::GetKey() {
 	int key = _getch();
 	
+
+	// 기능키를 누를 시 224를 먼저 받고 다시 한번 더 받는다. alt, control, shift 등 ㅋㅋ
 	if(key == 224)
 		key = 1000 + _getch();
 
+	//소문자를 대문자로 통일한다.
 	if(key>=97 && key <= 122)
 		key = key - 32;
 	return key;
@@ -98,16 +100,16 @@ bool CGameManager::inputProc()
 	return true;
 }
 void CGameManager::CreateTempMap() { 
-	m_Map.GetMapInfo(8, 8)->pChr = new CBlock();
-	m_Map.GetMapInfo(8, 9)->pChr = new CBlock();
-	m_Map.GetMapInfo(9, 8)->pChr = new CBlock();
-	m_Map.GetMapInfo(10, 8)->pChr = new CBlock();
-	m_Map.GetMapInfo(11, 8)->pChr = new CBlock();
+	m_Map.GetMapInfo(8, 8)->pChracter = new CBlock();
+	m_Map.GetMapInfo(8, 9)->pChracter = new CBlock();
+	m_Map.GetMapInfo(9, 8)->pChracter = new CBlock();
+	m_Map.GetMapInfo(10, 8)->pChracter = new CBlock();
+	m_Map.GetMapInfo(11, 8)->pChracter = new CBlock();
 }
 void CGameManager::CreateMobs() {
 
 	CMob* mob = new CMob();
 	mob->SetExp(30);
 	mob->SetName("멋진 몹");
-	m_Map.GetMapInfo(2, 3)->pChr = mob;
+	m_Map.GetMapInfo(2, 3)->pChracter = mob;
 }
