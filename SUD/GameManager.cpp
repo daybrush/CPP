@@ -7,6 +7,7 @@
 #include <conio.h>
 #include <windows.h>
 
+
 CGameManager::CGameManager(void)
 {
 	m_PC = new CPC();

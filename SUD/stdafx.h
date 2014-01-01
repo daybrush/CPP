@@ -11,6 +11,10 @@
 #include <tchar.h>
 #include <string>
 #include "Log.h"
+#include <crtdbg.h>
 
+#ifndef __DEBUG
+#define new new(_CLIENT_BLOCK, __FILE__, __LINE__)
+#endif
 
 // TODO: 프로그램에 필요한 추가 헤더는 여기에서 참조합니다.
