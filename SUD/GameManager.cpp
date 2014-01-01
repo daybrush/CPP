@@ -41,6 +41,7 @@ void CGameManager::Init() {
 	//CreateMobs();
 	GetKey();
 	GetStage(1);
+	GetKey();
 }
 void CGameManager::GetStage(int stage) {
 	delete m_Map;

@@ -9,13 +9,15 @@ CData::CData(void)
 CData::~CData(void)
 {
 }
-
+//문자열로 된 ' '으로 나누기
 std::string getStringFileItem(std::ifstream &istream)
 {
 	std::string item;
 	std::getline(istream, item, ' ');
 	return item;
 }
+
+//주로 숫자를 많이 가져오니까 string으로 가져오고 int로 변환한다.
 int getIntFileItem(std::ifstream &istream) {
 	std::string item;
 	std::getline(istream, item, ' ');
@@ -23,9 +25,10 @@ int getIntFileItem(std::ifstream &istream) {
 
 	return intItem;
 }
+//그런데 한 줄의 마지막은 ' '로 가져오면 안된다. 다음 줄까지 가져가버린다...
 int getIntFileLastItem(std::ifstream &istream) {
 	std::string item;
-	std::getline(istream, item, ' ');
+	std::getline(istream, item);
 	int	intItem = atoi(item.c_str());
 
 	return intItem;
@@ -36,7 +39,6 @@ CMob* CData::LoadMob(int mobNo) {
 	/*
 	몹 이름
 	hp mp exp
-	attackType reflection 0.4
 	attack defense
 	*/
 
@@ -73,8 +75,9 @@ CGameMap* CData::LoadMap(int mapNo) {
 	sprintf_s(buf, "map/map%d.txt",mapNo);
 	/*
 	이름
+	맵 설명
 	가로 세로
-	NPC npc번호 x y
+	BLOCK 1 x y
 	MOB mob번호 x y
 	*/
 
@@ -91,13 +94,9 @@ CGameMap* CData::LoadMap(int mapNo) {
 
 	
 
-	std::string stringMapWidth;
-	std::getline(mapFile, stringMapWidth, ' ');
-	int	mapWidth = atoi(stringMapWidth.c_str());
 	
-	std::string stringMapHeight;
-	std::getline(mapFile, stringMapHeight);
-	int	mapHeight = atoi(stringMapHeight.c_str());
+	int	mapWidth = getIntFileItem(mapFile);
+	int	mapHeight =  getIntFileLastItem(mapFile);
 	
 	printf_s("size : %d %d\n", mapWidth, mapHeight);
 
@@ -109,24 +108,18 @@ CGameMap* CData::LoadMap(int mapNo) {
 	while(!mapFile.eof())
 	{
 		std::string type;
-		std::string no;
-		std::string x;
-		std::string y;
 		std::getline(mapFile, type, ' ');
-		std::getline(mapFile, no, ' ');
-		std::getline(mapFile, x, ' ');
-		std::getline(mapFile, y);
 
-		int intNo = atoi(no.c_str());
-		int intX = atoi(x.c_str());
-		int intY = atoi(y.c_str());
+		int no = getIntFileItem(mapFile);
+		int x = getIntFileItem(mapFile);
+		int y = getIntFileLastItem(mapFile);
 
-		printf_s("-> %s %s %s %s\n", type.c_str(), no.c_str(), x.c_str(), y.c_str());
+		printf_s("-> %s %d %d %d\n", type.c_str(), no, x, y);
 
 		if(type == "MOB")
-			map->GetMapInfo(intX, intY)->pChracter = LoadMob(intNo);
+			map->GetMapInfo(x, y)->pChracter = LoadMob(no);
 		else if(type == "BLOCK")
-			map->GetMapInfo(intX, intY)->pChracter = new CBlock();
+			map->GetMapInfo(x, y)->pChracter = new CBlock();
 
 	}
 	mapFile.close();
