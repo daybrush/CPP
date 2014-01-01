@@ -16,12 +16,12 @@ public:
 	~CScreen(void);
 
 	void Clean();
-	void Show(CGameMap &m_Map,CPC *pc);
+	void Show(CGameMap *m_Map,CPC *pc);
 	void ShowInventory();
 
 	std::string ShowStatus(int line, CPC *pc);
 	void ShowSkill();
-	std::string ShowMap(int line, CGameMap &m_Map,CPC *pc);
+	std::string ShowMap(int line, CGameMap *m_Map,CPC *pc);
 
 };
 

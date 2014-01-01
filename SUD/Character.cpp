@@ -1,6 +1,8 @@
 ﻿#include "stdafx.h"
 #include "Character.h"
+
 #include "GameMap.h"
+#include <math.h>
 
 CCharacter::CCharacter(void)
 {
@@ -9,11 +11,8 @@ CCharacter::CCharacter(void)
 
 	m_name = "임시요";
 	m_exp = 0;
-
-	m_level = 1;
-	m_maxhp = m_hp = 20;
-	m_maxmp = m_mp = 20;
-	m_maxexp = 100;
+	m_level = 0;
+	LevelUp();
 }
 
 
@@ -29,22 +28,39 @@ void CCharacter::SetPosition(int x, int y) {
 }
 
 void CCharacter::Attacked(CCharacter* chr, int power, bool reflection) {
+	power = __max(1, power - m_defense);
+	int minmaxpower = -5 + rand() % 11;
+	power = power + power * minmaxpower / 20;
+	//  파워의 범위   3/4파워 ~ 5/4 파워 
+
 	char buffer[1024];
-	sprintf_s(buffer, "%s님이[%s]한테 %d데미지를 입혔습니다.",chr->GetName().c_str(), m_name.c_str(), power );	
+	switch(rand() % ATTACK_COUNT) {
+	case HIT:
+		sprintf_s(buffer, "%s님이 [%s]에게 %d데미지를 입혔습니다.",chr->GetName().c_str(), m_name.c_str(), power );
+		break;
+	case CRITICAL:
+		power = (int)(power * 1.5);
+		sprintf_s(buffer, "%s님이 [%s]에게 %d 크리티컬 데미지를 입혔습니다.",chr->GetName().c_str(), m_name.c_str(), power);
+		break;
+	case DEFENSE:
+		power = (int)(power / 2);
+		sprintf_s(buffer, "%s님이[%s]에게 %d 조금 데미지를 입혔습니다.",chr->GetName().c_str(), m_name.c_str(), power);
+		break;
+	case MISS:
+		sprintf_s(buffer, "%s님이 [%s]에게 미스!!!",chr->GetName().c_str(), m_name.c_str());
+		power = 0;
+		break;
+	}
+
+	
 	CLog::GetInstance()->Add(buffer);
 	
+
+	//반사....
 	if(reflection)
 		chr->Attacked(this, 3, false);
 
 	MinusHp(chr, power);
-	
-	if(chr->m_type != PC) {
-		char buffer2[1024];
-		sprintf_s(buffer2, "%s hp %5d / %5d", GetName().c_str(), GetHp(), GetMaxHp() );	
-		CLog::GetInstance()->AddMonsterLog(buffer2);
-	}
-
-
 
 }
 
@@ -75,6 +91,7 @@ void CCharacter::AddExp(int exp) {
 		AddExp(extraExp);
 	} else if(m_exp + exp == m_maxexp) {
 		LevelUp();
+		CLog::GetInstance()->Add("레벨 업하셨습니다.");
 	} else {
 		SetExp(m_exp + exp);
 	}
@@ -82,24 +99,28 @@ void CCharacter::AddExp(int exp) {
 void CCharacter::LevelUp() {
 	m_level = m_level + 1;
 	m_exp = 0;
-	m_maxexp = m_maxexp + 100;
-	CLog::GetInstance()->Add("레벨 업하셨습니다.");
+	m_maxexp = m_level * 20;
+	m_power = m_level * 7;
+	m_defense = m_level * 2;
+	m_hp = m_maxhp = m_level * 12;
+	m_mp = m_maxmp = m_level * 10;
 }
 
-Position CCharacter::Move(DIRECTION dir) {
+Position CCharacter::Move(DIRECTION dir, void *map) {
+	CGameMap* c_map = reinterpret_cast<CGameMap *>(map);
 	switch (dir)
 	{
 	case DIR_UP:
 		m_position.y = __max(m_position.y - 1, 0);
 		break;
 	case DIR_DOWN:
-		m_position.y = __min(m_position.y + 1, MAP_SIZE - 1);
+		m_position.y = __min(m_position.y + 1, c_map->GetHeight() - 1);
 		break;
 	case DIR_LEFT:
 		m_position.x = __max(m_position.x - 1, 0);
 		break;
 	case DIR_RIGHT:
-		m_position.x = __min(m_position.x + 1, MAP_SIZE - 1);;
+		m_position.x = __min(m_position.x + 1, c_map->GetWidth() - 1);
 		break;
 	default:
 		break;

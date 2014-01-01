@@ -1,16 +1,17 @@
 #pragma once
 
-#include "MapData.h"
+#include "GameMap.h"
+#include "Block.h"
+#include "Mob.h"
 
 class CData
 {
 public:
 	CData(void);
 	~CData(void);
-
-	void LoadMap();
+	CMob* LoadMob(int mobNo);
+	CGameMap* LoadMap(int mapNo);
 
 private:
-	CMapData* m_mapdatas[30];
 };
 

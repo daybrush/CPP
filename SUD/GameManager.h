@@ -1,7 +1,7 @@
 #pragma once
 #include "Screen.h"
-
-
+#include "Data.h"
+#include "GameAI.h"
 class CGameManager
 {
 
@@ -34,10 +34,15 @@ protected:
 	void CreateTempMap();
 	void CreateMobs();
 	void GameOver();
-
+	void GetStage(int stage);
+	void GameEnding();
 protected:
 	CPC* m_PC;
-	CGameMap m_Map;
+	CGameMap* m_Map;
 	CScreen m_Screen;
+	CData m_data;
+	CGameAI m_ai;
+	int m_stage;
+	bool m_flag;
 };
 #endif

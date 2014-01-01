@@ -9,14 +9,18 @@ public:
 	~CPC(void);
 	DIRECTION GetPerspective() {return m_Perspective;}
 	void SetPerspective(DIRECTION dir) {m_Perspective = dir;}
-	void ChangeDir(CGameMap &map, DIRECTION dir);
+	void ChangeDir(CGameMap *map, DIRECTION dir);
 	
-	void Attack(CGameMap& map);
+	void Attack(CGameMap* map);
 	void Killed(CCharacter* chr);
 	bool Is_Over(){return m_is_over;}
 	std::string GetSymbol();
+
+	void SetIsNextStage(bool is_next){m_nextStage = is_next;};
+	bool GetIsNextStage(){return m_nextStage;};
 protected:
 	DIRECTION m_Perspective;
 	bool m_is_over;
+	bool m_nextStage;
 };
 

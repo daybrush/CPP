@@ -15,7 +15,8 @@ void CScreen::Clean() {
 	std::system(CLEAR);
 }
 
-void CScreen::Show(CGameMap &maap, CPC *pc) {
+void CScreen::Show(CGameMap *maap, CPC *pc) {
+	/*
 	for(int i = 0; i < SCREEN_SIZE + 2; ++i ) {
 		printf_s("%s\n", ShowMap(i, maap, pc).c_str()); 
 	}
@@ -33,24 +34,27 @@ void CScreen::Show(CGameMap &maap, CPC *pc) {
 	
 	for(int i = 0; i < 5; ++i)
 		printf_s("%s\n",CLog::GetInstance()->Get(i).c_str());
-
+	*/
 	
-	/*
-	for(int i = 0; i < MAP_SIZE + 2; i++ ) {
+	//가로로 펼쳐주기.
+	for(int i = 0; i < SCREEN_SIZE + 2; i++ ) {
 		std::string str = ShowMap(i, maap, pc);
 		char buf[100];
-		
-		if(i <=5 && i > 0)
-			sprintf_s(buf, "%-30.30s %.60s", str.c_str(), CLog::Get(i - 1).c_str() );
-		else if(i>7 && i <= 11)
-			sprintf_s(buf, "%-30.30s %.60s", str.c_str(), ShowStatus(i - 8, pc).c_str()); 
+		if(i >= 1 && i <= 2)//몬스터 로그
+			sprintf_s(buf, "%-30.30s %.60s", str.c_str(), CLog::GetInstance()->GetMonsterLog(i + 2).c_str() );
+		else if(i>3 && i <= 7)//내 상태창.
+			sprintf_s(buf, "%-30.30s %.60s", str.c_str(), ShowStatus(i - 4, pc).c_str()); 
 		else
 			sprintf_s(buf, "%-30.30s", str.c_str());
 
 		printf_s("%s\n", buf);
 	}
-	printf_s("%s\n", CLog::GetMonsterLog(4).c_str());
-	*/
+	//일반적인 로그
+	printf_s("%s\n", maap->GetDetail().c_str());
+	for(int i = 0 ; i < 4; ++i) {
+		printf_s("%s\n", CLog::GetInstance()->Get(i).c_str());
+	}
+	
 }
 std::string CScreen::ShowStatus(int line, CPC *pc) {
 	char buf[100];
@@ -71,7 +75,7 @@ std::string CScreen::ShowStatus(int line, CPC *pc) {
 	
 	return buf;
 }
-std::string CScreen::ShowMap(int line, CGameMap &mmap, CPC *pc) {
+std::string CScreen::ShowMap(int line, CGameMap *mmap, CPC *pc) {
 	std::string map;
 	if(line == 0) {
 		map = "┏";
@@ -93,23 +97,31 @@ std::string CScreen::ShowMap(int line, CGameMap &mmap, CPC *pc) {
 
 		//
 		Position screen_position;
+		//맵사이즈는 스크린사이즈보다 크거나 같은 걸로 가정한다.
+		//스크린 위치가 움직이면서 스크린 사이즈에 해당하는 맵을 보여준다.
+
+
+		//일단 스크린의 위치는 pc를 기준으로 가운데로 간다.
 		screen_position.x = pc->GetPosition().x - SCREEN_SIZE / 2;
 		screen_position.y = pc->GetPosition().y - SCREEN_SIZE / 2;
 
+		//x,y가 0 미만이면 안된다.
 		screen_position.x = __max(0, screen_position.x);
 		screen_position.y = __max(0, screen_position.y);
 
-		screen_position.x = __min(screen_position.x, MAP_SIZE - SCREEN_SIZE);
-		screen_position.y = __min(screen_position.y, MAP_SIZE - SCREEN_SIZE);
+		//스크린이 맵에서 벗어나면 안된다.
+		screen_position.x = __min(screen_position.x, mmap->GetWidth() - SCREEN_SIZE);
+		screen_position.y = __min(screen_position.y, mmap->GetHeight() - SCREEN_SIZE);
 
-		int y = line - 1 + screen_position.y;
+
+		int y = line - 1 + screen_position.y;//스크린의 y에 해당하는 map y좌표.
 		map = map + "┃";
 		for(int j = 0; j < SCREEN_SIZE; ++j) {
-			int x = screen_position.x + j;
+			int x = screen_position.x + j;//스크린의 x에 해당하는 map x좌표.
 			if(pc->GetPosition().x == x && pc->GetPosition().y == y) {
 				map = map + pc->GetSymbol();
-			} else if(mmap.IsShow(x, y)) {
-				map = map + mmap.GetMapInfoName(x, y);
+			} else if(mmap->IsShow(x, y)) {
+				map = map + mmap->GetMapInfoName(x, y);
 			} else {
 				map = map + "　";
 			}
