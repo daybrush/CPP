@@ -30,6 +30,7 @@ void CCharacter::SetPosition(int x, int y) {
 void CCharacter::Attacked(CCharacter* chr, int power, bool reflection) {
 	power = __max(1, power - m_defense);
 	int minmaxpower = -5 + rand() % 11;
+
 	power = power + power * minmaxpower / 20;
 	//  파워의 범위   3/4파워 ~ 5/4 파워 
 
@@ -103,7 +104,7 @@ void CCharacter::LevelUp() {
 	m_power = m_level * 7;
 	m_defense = m_level * 2;
 	m_hp = m_maxhp = m_level * 12;
-	m_mp = m_maxmp = m_level * 10;
+	m_mp = m_maxmp = m_level * 7;
 }
 
 Position CCharacter::Move(DIRECTION dir, void *map) {

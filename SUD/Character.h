@@ -65,7 +65,17 @@ public:
 	void SetMaxMp(int maxmp){m_maxmp = maxmp;}
 
 	int GetMp() {return m_mp;}
-	void SetMp(int mp){m_mp = mp;}
+	void SetMp(int mp){
+		if(mp >= m_maxmp)
+			m_mp = m_maxmp;
+		else
+			m_mp = mp;
+	}
+	void MinusMp(int mp) {
+		m_mp = m_mp - mp;
+		if(m_mp <= 0)
+			m_mp = 0;
+	}
 
 	int GetExp() {return m_exp;}
 	void SetExp(int exp){m_exp = exp;}

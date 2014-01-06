@@ -51,9 +51,11 @@ void CScreen::Show(CGameMap *maap, CPC *pc) {
 	}
 	//일반적인 로그
 	printf_s("%s\n", maap->GetDetail().c_str());
-	for(int i = 0 ; i < 4; ++i) {
+	for(int i = 0 ; i < 5; ++i) {
 		printf_s("%s\n", CLog::GetInstance()->Get(i).c_str());
 	}
+
+	pc->SetSkillNotShow();
 	
 }
 std::string CScreen::ShowStatus(int line, CPC *pc) {
@@ -94,16 +96,18 @@ std::string CScreen::ShowMap(int line, CGameMap *mmap, CPC *pc) {
 		return map;
 	}
 	else {
-
+		DIRECTION dir = pc->GetPerspective();//캐릭터가 처다보고 있는 방향
+		Position pcPosition = pc->GetPosition();//캐릭터의 위치
 		//
 		Position screen_position;
+
 		//맵사이즈는 스크린사이즈보다 크거나 같은 걸로 가정한다.
 		//스크린 위치가 움직이면서 스크린 사이즈에 해당하는 맵을 보여준다.
 
 
 		//일단 스크린의 위치는 pc를 기준으로 가운데로 간다.
-		screen_position.x = pc->GetPosition().x - SCREEN_SIZE / 2;
-		screen_position.y = pc->GetPosition().y - SCREEN_SIZE / 2;
+		screen_position.x = pcPosition.x - SCREEN_SIZE / 2;
+		screen_position.y = pcPosition.y - SCREEN_SIZE / 2;
 
 		//x,y가 0 미만이면 안된다.
 		screen_position.x = __max(0, screen_position.x);
@@ -116,14 +120,46 @@ std::string CScreen::ShowMap(int line, CGameMap *mmap, CPC *pc) {
 
 		int y = line - 1 + screen_position.y;//스크린의 y에 해당하는 map y좌표.
 		map = map + "┃";
+
+
+
+		int skillType = pc->GetSkillType();
+		std::string skillSymbol = "━";
+		if(dir == DIR_UP || dir == DIR_DOWN) {
+			skillSymbol = "┃";
+		}
+
 		for(int j = 0; j < SCREEN_SIZE; ++j) {
 			int x = screen_position.x + j;//스크린의 x에 해당하는 map x좌표.
-			if(pc->GetPosition().x == x && pc->GetPosition().y == y) {
+			if(pcPosition.x == x && pcPosition.y == y) {
 				map = map + pc->GetSymbol();
 			} else if(mmap->IsShow(x, y)) {
 				map = map + mmap->GetMapInfoName(x, y);
 			} else {
-				map = map + "　";
+				if(skillType == 1) {
+					if(dir == DIR_UP && y < pcPosition.y && x == pcPosition.x)
+						map = map + skillSymbol;
+					else if(dir == DIR_DOWN && y > pcPosition.y && x == pcPosition.x)
+						map = map + skillSymbol;
+					else if(dir == DIR_LEFT && x < pcPosition.x && y == pcPosition.y)
+						map = map + skillSymbol;
+					else if(dir == DIR_RIGHT && x > pcPosition.x && y == pcPosition.y)
+						map = map + skillSymbol;
+					else map = map + "　";
+				} else if(skillType == 2) {
+					if(x >= pcPosition.x - 1 && x <= pcPosition.x + 1) {
+						if(y >= pcPosition.y - 1 && y<= pcPosition.y + 1) {
+							map = map + skillSymbol;
+						} else {
+							map = map + "　";
+						}
+					} else {
+						map = map + "　";
+					}
+				}
+				else {
+					map = map + "　";
+				}
 			}
 		}
 		map = map + "┃";

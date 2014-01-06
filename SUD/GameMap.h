@@ -19,6 +19,8 @@ class CGameMap
 public:
 	CGameMap(void);
 	~CGameMap(void);
+	void SetNo(int no) {m_no = no;}
+	int GetNo() {return m_no;}
 	void SetName(std::string name) {m_name = name;}
 	void SetSize(int width, int height) {m_width = width; m_height = height;}
 	void SetDetail(std::string detail) {m_detail = detail;}
@@ -39,6 +41,7 @@ protected:
 
 	std::string m_name;
 	std::string m_detail;
+	int m_no;
 	int m_width;
 	int m_height;
 	

@@ -7,6 +7,7 @@ CPC::CPC(void)
 	m_is_over = false;
 	m_nextStage = false;
 	m_type = PC;
+	m_name = "플레이어";
 }
 
 
@@ -68,12 +69,87 @@ void CPC::Killed(CCharacter *chr) {
 	CLog::GetInstance()->Add("YOU DIE");
 	m_is_over = true;
 }
-void CPC::Attack(CGameMap* map) {
-	//char buffer[1024];
-	//sprintf_s(buffer, "%s님이 휘둘렀습니다.",GetName().c_str());	
-	//CLog::GetInstance()->Add(buffer);
+void CPC::AttackStraight(CGameMap *map) {
+	if(map->GetNo() < 4) {
+		CLog::GetInstance()->Add("4번 맵부터 가능한 스킬입니다.");
+		return;
+	} 
+	if(m_mp < 10) {
+		CLog::GetInstance()->Add("MP가 부족합니다.");
+		return;
+	}
+	CLog::GetInstance()->Add("[와다다다] 스킬 발동");
+	m_skillType = 1;
+	MinusMp(10);
+	int x = 0;
+	int y = 0;
+	switch(m_Perspective) {
+	case DIR_UP:
+		y = -1;
+		break;
+	case DIR_DOWN:
+		y = 1;
+		break;
+	case DIR_LEFT:
+		x = -1;
+		break;
+	case DIR_RIGHT:
+		x = 1;
+		break;
+	default:
+		return;
+	}
 
-	Position pos = m_position;//자기 위치에서 보고 있는 방향의 위치
+	Position pos = m_position;
+	bool flag = true;
+	int power = (int) (m_power * 1.1);//1.1배
+	while(flag) {
+		if(pos.x >= map->GetWidth() || pos.x < 0 || pos.y < 0 || pos.y >= map->GetHeight()) {
+			flag = false;
+			break;
+		}
+		MapInfo* mapinfo = map->GetMapInfo(pos.x, pos.y);
+		
+		if(map->IsShow(pos.x, pos.y) && mapinfo && mapinfo->pChracter)
+			mapinfo->pChracter->Attacked(this, power, false);
+
+		pos.x += x;
+		pos.y += y;
+		//자신이 바라보고 있는 방향으로 쭉쭉쭉 공격.
+	}
+}
+void CPC::AttackWide(CGameMap *map) {
+	if(map->GetNo() < 9) {
+		CLog::GetInstance()->Add("3학기 부터 가능한 스킬입니다.");
+		return;
+	} 
+	if(m_mp < 20) {
+		CLog::GetInstance()->Add("MP가 부족합니다.");
+		return;
+	}
+	CLog::GetInstance()->Add("[벼락치기] 스킬 발동");
+	m_skillType = 2;
+	MinusMp(20);
+	Position pos = m_position;
+	int power = (int) (m_power * 2);//1.5배 공격
+	
+	//상하좌우 대각선 포함.
+	for(int i = -1; i <= 1; ++i) {
+		for(int j = -1; j <= 1; ++j) {
+			int x = pos.x + i;
+			int y = pos.y + j;
+			if(x >= map->GetWidth() || x < 0 || y < 0 || y >= map->GetHeight())
+				continue;
+			
+			MapInfo* mapinfo = map->GetMapInfo(x, y);
+			if(map->IsShow(x, y) && mapinfo && mapinfo->pChracter)
+				mapinfo->pChracter->Attacked(this, power, false);
+		}
+	}
+}
+void CPC::Attack(CGameMap* map) {
+
+	Position pos = m_position;//자기 위치에서 보고 있는 방향 다음의 위치
 	Position nowpos = m_position;//자기 위치
 
 

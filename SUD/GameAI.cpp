@@ -11,7 +11,7 @@ CGameAI::CGameAI(void)
 CGameAI::~CGameAI(void)
 {
 }
-void CGameAI::Attack(CCharacter *character, CGameMap *gamemap) {
+void CGameAI::Attack(CPC *character, CGameMap *gamemap) {
 
 	Position position = character->GetPosition();
 	/*
@@ -46,12 +46,13 @@ void CGameAI::Attack(CCharacter *character, CGameMap *gamemap) {
 		return;
 	
 	character->Attacked(monster, monster->GetPower(), true);
-	
+	character->SetUnBeatDelay();
 	
 
 }
-void CGameAI::Move(CCharacter *character, CGameMap *gamemap) {
+void CGameAI::Move(CPC *character, CGameMap *gamemap) {
 	Position position = character->GetPosition();
+	
 	for(int i = 0; i < gamemap->GetWidth(); ++i) {
 		for(int j = 0 ; j < gamemap->GetHeight(); ++j) {
 			if(!gamemap->IsShow(i, j))
@@ -66,11 +67,10 @@ void CGameAI::Move(CCharacter *character, CGameMap *gamemap) {
 			int gapY = position.y - j;
 			
 			int probability = rand() % 30;
-			if((probability <= 2 || probability >= 5 && probability < 8) && gapX != 0)
+			if((probability <= 3) && gapX != 0)
 				gamemap->SetCharacterMove(i, j, i + gapX / abs(gapX), j);
-			else if((probability == 4 || probability == 3) && gapY != 0)
+			else if((probability >=4 && probability < 8) && gapY != 0)
 				gamemap->SetCharacterMove(i, j, i, j + gapY / abs(gapY));
-
 
 		}
 	}

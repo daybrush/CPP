@@ -43,8 +43,11 @@ CMob* CData::LoadMob(int mobNo) {
 	*/
 
 	std::ifstream mobFile(buf);
+	
 	std::string mobName;
 	std::getline(mobFile, mobName);
+
+
 	CMob* mob = new CMob();
 	mob->SetName(mobName);
 	
@@ -71,7 +74,7 @@ CMob* CData::LoadMob(int mobNo) {
 }
 
 CGameMap* CData::LoadMap(int mapNo) {
-	char buf[100];
+	char buf[20];
 	sprintf_s(buf, "map/map%d.txt",mapNo);
 	/*
 	이름
@@ -87,6 +90,7 @@ CGameMap* CData::LoadMap(int mapNo) {
 		return nullptr;
 
 	std::string mapName;
+	
 	std::getline(mapFile, mapName);
 	
 	std::string mapDetail;
@@ -101,6 +105,7 @@ CGameMap* CData::LoadMap(int mapNo) {
 	printf_s("size : %d %d\n", mapWidth, mapHeight);
 
 	CGameMap* map = new CGameMap();
+	map->SetNo(mapNo);
 	map->SetName(mapName);
 	map->SetSize(mapWidth, mapHeight);
 	map->SetDetail(mapDetail);
@@ -116,11 +121,14 @@ CGameMap* CData::LoadMap(int mapNo) {
 
 		printf_s("-> %s %d %d %d\n", type.c_str(), no, x, y);
 
-		if(type == "MOB")
-			map->GetMapInfo(x, y)->pChracter = LoadMob(no);
-		else if(type == "BLOCK")
+		if(type == "MOB") {
+			if(map->GetMapInfo(x, y)->pChracter != nullptr)
+				printf_s("이미 몬스터가 존재합니다.\n");
+			else
+				map->GetMapInfo(x, y)->pChracter = LoadMob(no);
+		} else if(type == "BLOCK") {
 			map->GetMapInfo(x, y)->pChracter = new CBlock();
-
+		}
 	}
 	mapFile.close();
 
